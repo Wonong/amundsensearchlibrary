@@ -61,8 +61,10 @@ class BaseDocumentsAPI(Resource):
         self.parser.add_argument('data', required=True)
         args = self.parser.parse_args()
 
+        # LOGGER.info(str(args.get('data')))
+
         try:
-            data = self.schema(many=True, strict=False).loads(args.get('data')).data
+            data = self.schema(many=True, strict=False).loads(args.get('data').replace("\'", "\"")).data
             results = self.proxy.create_document(data=data, index=args.get('index'))
             return results, HTTPStatus.OK
         except RuntimeError as e:
